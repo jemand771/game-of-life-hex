@@ -17,7 +17,6 @@ export class CanvasComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (!this.canvas) throw "where canvas";
-    // TODO dynamic sizing, maybe scroll/pan/flick
     paper.setup(this.canvas.nativeElement);
     this.game.draw();
   }

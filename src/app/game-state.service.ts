@@ -1,7 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import * as paper from "paper";
 
-const PAPER_SCALE = 40;
 const COLOR_ALIVE = new paper.Color("#44aa44");
 const COLOR_DEAD = new paper.Color("#ffffff");
 
@@ -49,9 +48,9 @@ export class GameStateService {
         if (yDist === 0 && Math.abs(xDist) === 1) return true;
         return xDist === yDist && Math.abs(xDist) === 1;
       }));
-      this.needsRedraw.emit();
     }
     this._size = size;
+    this.needsRedraw.emit();
     this.lastAllocationTime = performance.now() - startTime;
   }
 
@@ -60,7 +59,7 @@ export class GameStateService {
   }
 
   public draw() {
-    this.nodes.forEach(node => node.draw());
+    this.nodes.forEach(node => node.draw(230 / this.size));
   }
 
   public tick() {
@@ -120,7 +119,7 @@ export class Cell {
   public get paperPoint() {
     const yVect = new paper.Point(-Math.sqrt(3) / 2, -1.5);
     const xVect = new paper.Point(Math.sqrt(3), 0);
-    return xVect.multiply(this.x).add(yVect.multiply(this.y)).multiply(PAPER_SCALE).add(paper.view.center);
+    return xVect.multiply(this.x).add(yVect.multiply(this.y));
   }
 
   public prepareTurn() {
@@ -132,17 +131,18 @@ export class Cell {
     this.alive = this._aliveNextTurn;
   }
 
-  public draw() {
-    if (this.layer) return;
-    const pos = this.paperPoint;
+  public draw(scale: number) {
+    this.remove();
+    const pos = this.paperPoint.multiply(scale).add(paper.view.center);
     this.layer = new paper.Layer();
     this.layer.fillColor = new paper.Color(1, 0, 0)
     this.layer.onClick = () => this.alive = !this.alive;
-    this.polygon = new paper.Path.RegularPolygon(pos, 6, PAPER_SCALE);
+    this.polygon = new paper.Path.RegularPolygon(pos, 6, scale);
     this.polygon.strokeWidth = 1;
     this.polygon.strokeColor = new paper.Color("#000000");
     const text = new paper.PointText({});
     text.content = [this.x, this.y].join(", ");
+    text.fontSize = scale / 2;
     text.position = pos;
     this.alive = this.alive;
   }
