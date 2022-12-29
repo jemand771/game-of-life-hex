@@ -1,0 +1,4 @@
+<input [(ngModel)]="game.size" max="20" min="1" type="range">
+<button (click)="game.tick()">tick</button>
+<textarea #alivePos cols="50" rows="5" wrap="hard">2,3 0,2 3,2 -2,1 -1,0 2,0 0,-1 -3,-2 1,-2 -2,-3</textarea>
+<button (click)="loadAlivePos()">load</button>
