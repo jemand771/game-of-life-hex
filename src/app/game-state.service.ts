@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import * as paper from "paper";
+import * as paper from "paper/dist/paper-core";
 
 const COLOR_ALIVE = new paper.Color("#44aa44");
 const COLOR_DEAD = new paper.Color("#ffffff");

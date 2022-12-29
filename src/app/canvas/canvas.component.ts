@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {GameStateService} from "../game-state.service";
-import * as paper from "paper";
+import * as paper from "paper/dist/paper-core";
 
 @Component({
   selector: 'app-canvas',
