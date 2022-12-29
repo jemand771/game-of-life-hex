@@ -21,4 +21,9 @@ export class SettingsPanelComponent {
       if (node) node.alive = true;
     }
   }
+
+  protected saveAlivePos() {
+    if (!this.alivePos?.nativeElement) return;
+    this.alivePos.nativeElement.value = this.game.nodes.filter(node => node.alive).map(node => [node.x, node.y].join(",")).join(" ");
+  }
 }

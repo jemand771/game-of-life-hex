@@ -12,9 +12,12 @@ export class GameStateService {
 
   nodes: Cell[] = [];
   needsRedraw = new EventEmitter<void>();
+  lastAllocationTime = 0;
+  ups: number = 1;
+  shouldRun = false;
 
   constructor() {
-    this.size = 4;
+    this.size = 5;
   }
 
   private _size = 0;
@@ -24,12 +27,13 @@ export class GameStateService {
   }
 
   public set size(size: number) {
-    if (size == this._size) return;
+    const startTime = performance.now();
     if (size < this.size) {
       this.nodes.filter(node => node.ring >= size).forEach(node => node.remove());
       this.nodes = this.nodes.filter(node => node.ring < size);
       this.nodes.forEach(node => node.neighbours = node.neighbours.filter(neighbour => neighbour.ring <= size));
-    } else {
+    }
+    if (size > this.size) {
       for (let x = 1 - size; x < size; x++) {
         for (let y = 1 - size; y < size; y++) {
           if (this.findNode(x, y)) continue;
@@ -48,6 +52,7 @@ export class GameStateService {
       this.needsRedraw.emit();
     }
     this._size = size;
+    this.lastAllocationTime = performance.now() - startTime;
   }
 
   public findNode(x: number, y: number): Cell | undefined {
@@ -61,6 +66,21 @@ export class GameStateService {
   public tick() {
     this.nodes.forEach(node => node.prepareTurn());
     this.nodes.forEach(node => node.executeTurn());
+  }
+
+  public run() {
+    this.shouldRun = true;
+    this.runner();
+  }
+
+  public runner() {
+    if (!this.shouldRun) return;
+    this.tick();
+    setTimeout(() => this.runner(), 1000 / this.ups);
+  }
+
+  public stop() {
+    this.shouldRun = false;
   }
 }
 
