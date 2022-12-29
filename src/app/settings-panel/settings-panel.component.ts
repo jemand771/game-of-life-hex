@@ -14,16 +14,11 @@ export class SettingsPanelComponent {
   }
 
   protected loadAlivePos() {
-    const numbers = (this.alivePos?.nativeElement.value ?? "").split(/[,; \n]/).filter(elem => elem).map(elem => parseInt(elem.trim()));
-    this.game.nodes.forEach(node => node.alive = false);
-    for (let i = 0; i < numbers.length; i += 2) {
-      const node = this.game.findNode(numbers[i], numbers[i + 1]);
-      if (node) node.alive = true;
-    }
+    this.game.aliveString = (this.alivePos?.nativeElement.value ?? "");
   }
 
   protected saveAlivePos() {
     if (!this.alivePos?.nativeElement) return;
-    this.alivePos.nativeElement.value = this.game.nodes.filter(node => node.alive).map(node => [node.x, node.y].join(",")).join(" ");
+    this.alivePos.nativeElement.value = this.game.aliveString;
   }
 }

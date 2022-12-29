@@ -15,6 +15,7 @@
   <button (click)="game.run()" [disabled]="game.shouldRun">run</button>
   <button (click)="game.stop()" [disabled]="!game.shouldRun">stop</button>
   UPS: <input [(ngModel)]="game.ups" max="20" min="1" type="range"> {{ game.ups }}
+  <button (click)="game.runUntilLoop()" [disabled]="game.shouldRun">find loop</button>
   <h3>game setup</h3>
   <p>use the slider to set a reasonable board size, or go crazy and enter your own. don't overdo it though, the
     allocation code is really slow.</p>

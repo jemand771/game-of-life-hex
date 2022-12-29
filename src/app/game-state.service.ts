@@ -81,6 +81,27 @@ export class GameStateService {
   public stop() {
     this.shouldRun = false;
   }
+
+  public runUntilLoop() {
+    const seen: string[] = [];
+    while (!seen.includes(this.aliveString)) {
+      seen.push(this.aliveString);
+      this.tick();
+    }
+  }
+
+  public get aliveString() {
+    return this.nodes.filter(node => node.alive).map(node => [node.x, node.y].join(",")).join(" ");
+  }
+
+  public set aliveString(aliveString: string) {
+    const numbers = aliveString.split(/[,; \n]/).filter(elem => elem).map(elem => parseInt(elem.trim()));
+    this.nodes.forEach(node => node.alive = false);
+    for (let i = 0; i < numbers.length; i += 2) {
+      const node = this.findNode(numbers[i], numbers[i + 1]);
+      if (node) node.alive = true;
+    }
+  }
 }
 
 export class Cell {
